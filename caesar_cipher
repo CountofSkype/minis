@@ -1,0 +1,125 @@
+Приложение "Шифр цезаря." Используется для шифровки/дешифровки сообщения сдвигом вправо.
+ * проверка правильности введенных данных
+ * работает с русским/английским языками
+ * возможность начать работу со следующим сообщением
+ * указано решение для известного диапазона значений сдвига (для конкретного значения сдвига закомментировать 97-104, 107-108 и раскомментировать 70-76, 109)
+ ___________________________________________________________________________________________________________________________________________________________________________________
+ 
+def isvalid(key):
+    if key.isdigit():
+        return True
+
+
+def caesar(language, direction, key, text):
+    if language == 'русский':
+        data = {'first_upper': ord('А'),
+                'first_lower': ord('а'),
+                'last_upper': ord('Я'),
+                'last_lower': ord('я'),
+                'len_alphabet': 32}
+    elif language == 'английский':
+        data = {'first_upper': ord('A'),
+                'first_lower': ord('a'),
+                'last_upper': ord('Z'),
+                'last_lower': ord('z'),
+                'len_alphabet': 26}
+
+    text_final = ''
+    if direction == 'шифровка':
+        for c in text:
+            if c.isalpha():
+                crypt_char = ord(c) + key
+                if c.isupper():
+                    if crypt_char > data['last_upper']:
+                        crypt_char -= data['len_alphabet']
+                elif c.islower():
+                    if crypt_char > data['last_lower']:
+                        crypt_char -= data['len_alphabet']
+                text_final += chr(crypt_char)
+            else:
+                text_final += c
+    elif direction == 'дешифровка':
+        for c in text:
+            if c.isalpha():
+                crypt_char = ord(c) - key
+                if c.isupper():
+                    if crypt_char < data['first_upper']:
+                        crypt_char += data['len_alphabet']
+                elif c.islower():
+                    if crypt_char < data['first_lower']:
+                        crypt_char += data['len_alphabet']
+                text_final += chr(crypt_char)
+            else:
+                text_final += c
+    return text_final
+
+
+def main_():
+    while True:
+        language = input('Укажите язык сообщения (русский/английский):\n')
+        if language not in ('русский', 'английский'):
+            print('Неправильно указан язык')
+            continue
+        break
+    while True:
+        direction = input('Какое действие необходимо выполнить (шифровка/дешифровка)?\n')
+        if direction not in ('шифровка', 'дешифровка'):
+            print('Я не умею выполнять данное действие')
+            continue
+        break
+    #   while True:
+    #     key = input('Укажите ключ (число):\n')
+    #     if not isvalid(key):
+    #         print('Неверное значение ключа. Повторите ввод')
+    #         continue
+    #     key = int(key)
+    #     break
+    while True:
+        text = input('Введите сообщение:\n')
+        if language == 'русский':
+            for c in text:
+                if c.isalpha():
+                    if not ord('А') <= ord(c) <= ord('я'):
+                        print('Вы указали "русский", а вводите непонятно что!')
+                        break
+            else:
+                break
+            continue
+        if language == 'английский':
+            for c in text:
+                if c.isalpha():
+                    if not ord('A') <= ord(c) <= ord('z'):
+                        print('Вы указали "английский", а вводите непонятно что!')
+                        break
+            else:
+                break
+            continue
+    while True:
+      a = input('Укажите начальное значение:\n')
+      b = input('Укажите конечное значение:\n')
+      if not isvalid(a) or not isvalid(b):
+          print('Неверный диапазон')
+          continue
+      a, b = int(a), int(b)
+      break
+    print('Выполняю заданную задачу...')
+    print('Готово!\nВаше сообщение:')
+    for i in range(a, b + 1):
+        print(caesar(language, direction, i, text))
+    # print(caesar(language, direction, key, text))
+    print('**********************************************************************************************')
+
+
+print('**********************************************************************************************\n')
+print('''                              Здравствуй, пользователь!\n
+    Данная программа предназначена для шифровки/дешифровки сообщений при помощи шифра Цезаря.
+    Для того, чтобы ей воспользоваться необходимо ввести направление работы, указать язык, на
+    котором ваше сообщение написано, а также указать ключ (значение сдвига).''', '\n')
+print('**********************************************************************************************')
+while True:
+    main_()
+    more = input('Выполнить новую задачу?\n')
+    if more.lower() == 'да':
+        continue
+    print('Спасибо, что воспользовались данной программой!')
+    break
