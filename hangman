@@ -1,0 +1,153 @@
+Игра "Виселица". Нужно угадать слово либо по буквам, либо целиком за 6 попыток.
+ * защита от неверного ввода
+ * новая игра
+ * вывод ошибок и количества оставшихся попыток
+_______________________________________________________________________________________________________________________________________________________________________________
+ 
+import random
+
+word_list = ['человек', 'собака', 'кошка', 'птица', 'животное',
+             'товарищ', 'крыса', 'голубь', 'доберман', 'лабрадор']
+
+
+def get_word():
+    return random.choice(word_list).upper()
+
+
+def display_hangman(tries):
+    stages = [  # финальное состояние: голова, торс, обе руки, обе ноги
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |     / \\
+           -
+        ''',
+        # голова, торс, обе руки, одна нога
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |     / 
+           -
+        ''',
+        # голова, торс, обе руки
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|/
+           |      |
+           |      
+           -
+        ''',
+        # голова, торс и одна рука
+        '''
+           --------
+           |      |
+           |      O
+           |     \\|
+           |      |
+           |     
+           -
+        ''',
+        # голова и торс
+        '''
+           --------
+           |      |
+           |      O
+           |      |
+           |      |
+           |     
+           -
+        ''',
+        # голова
+        '''
+           --------
+           |      |
+           |      O
+           |    
+           |      
+           |     
+           -
+        ''',
+        # начальное состояние
+        '''
+           --------
+           |      |
+           |      
+           |    
+           |      
+           |     
+           -
+        '''
+    ]
+    return stages[tries]
+
+
+def play(word):
+    print('Давайте сыграем в виселицу!')
+    print(display_hangman(6))
+    word_completion = ['_' for c in range(len(word))]
+    guessed = False
+    guessed_letters = []
+    guessed_words = []
+    tries = 6
+
+    while tries > 0:
+        while True:
+            text = input('Введите слово или букву:\n').upper()
+            print('************************************************************************************')
+            for c in text:
+                if c.isalpha():
+                    if not ord('А') <= ord(c) <= ord('я'):
+                        print('Можно использовать только русские символы!')
+                        break
+                else:
+                    print('Можно использовать только русские символы!')
+                    break
+            else:
+                break
+            continue
+        if len(text) == 1 and text in word:
+            for i in range(len(word_completion)):
+                for ch in range(len(word)):
+                    if text == word[ch]:
+                        word_completion[ch] = word[ch]
+        elif text != word:
+            if len(text) == 1:
+                if text in word:
+                    if text in guessed_letters:
+                        print('Вы уже вводили эту букву, попробуйте другую!')
+                        continue
+                guessed_letters.append(text)
+                print('Вы ошиблись, в слове нет такой буквы!')
+            else:
+                guessed_words.append(text)
+                print('Вы ошиблись!')
+            tries -= 1
+        if text == word or '_' not in word_completion:
+            print('Победа')
+            print('************************************************************************************')
+            break
+        print(display_hangman(tries))
+        print(*word_completion)
+        print(f'Осталось попыток: {tries}')
+        print(f'''Ошибки: {", ".join(guessed_letters)}\n\t\t{", ".join(guessed_words)}''')
+        print('************************************************************************************')
+    else:
+        print(f'Вы не смогли отгадать слово: {word}')
+
+
+while True:
+    play(get_word())
+    answer = input('Сыграем еще(да)?\n').lower()
+    if answer == 'да':
+        continue
+    else:
+        print('Спасибо за игру!')
+        break
