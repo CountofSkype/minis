@@ -123,3 +123,59 @@ while True:
         continue
     print('Спасибо, что воспользовались данной программой!')
     break
+
+______________________________________________________________________________________________________________________________________________________________________________
+Реализация шифра Цезаря с ключом, равным длине слова, на примере английского текста:
+
+
+
+data = {'first_upper': ord('A'),
+        'first_lower': ord('a'),
+        'last_upper': ord('Z'),
+        'last_lower': ord('z'),
+        'len_alphabet': 26}
+
+
+def caesar(key, text):
+    text_final = ''
+    for i in range(len(text.split())):
+        for c in text.split()[i]:
+            if c.isalpha():
+                crypt_char = ord(c) + key[i]
+                if c.isupper():
+                    if crypt_char > data['last_upper']:
+                        crypt_char -= data['len_alphabet']
+                elif c.islower():
+                    if crypt_char > data['last_lower']:
+                        crypt_char -= data['len_alphabet']
+                text_final += chr(crypt_char)
+            else:
+                text_final += c
+        text_final += ' '
+    return text_final
+
+
+def main_():
+    while True:
+        text = input('Enter your message:\n')
+        for c in text:
+            if c.isalpha():
+                if not ord('A') <= ord(c) <= ord('z'):
+                    print('You should use english letters only!')
+                    break
+        else:
+            break
+        continue 
+    text_k = text.split()
+    keys = []
+    for ch in text_k:
+        len_ch = 0
+        for char in ch:
+            if char.isalpha():
+                len_ch += 1
+        keys.append(len_ch)
+    print(caesar(keys, text))
+
+    
+main_()
+
