@@ -1,0 +1,69 @@
+Напишите программу, которая получает на вход пять карт и выводит старшую покерную комбинацию, которая образуется этими картами.
+
+
+Формат ввода:
+Одна строка, на которой указаны пять карт в формате <value><suit>, записанные через пробел.
+
+Формат вывода:
+Название старшей комбинации, сформировавшейся на пришедшем наборе.
+
+
+Sample Input:
+
+10C JC QC KC AC
+
+Sample Output:
+
+Royal Flush
+__________________________________________________________________________________________________________________________________________________________________________________
+
+from collections import Counter
+
+value = {'2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12, 'K': 13, 
+         'A': 14}
+hand = input().split()
+suit = {i[-1] for i in hand}
+cards = sorted(value[i[:-1]] for i in hand)
+
+
+def flush():
+    if cards[-1] - cards[0] == 4:
+        if cards[0] == 10:
+            print('Royal Flush')
+        else:
+            print('Straight Flush')
+    else:
+        print('Flush')
+        
+        
+def straight():
+    if cards[-1] - cards[0] == 4:
+        print('Straight')
+        return True
+    return False
+    
+    
+def some_cards():
+    if Counter(cards).most_common(1)[0][1] == 4:
+        print('Four of a Kind')
+    elif Counter(cards).most_common(1)[0][1] == 3: 
+        if Counter(cards).most_common(2)[1][1] == 2:
+            print('Full House')
+        else:
+            print('Three of a Kind')
+    elif Counter(cards).most_common(2)[0][1] and Counter(cards).most_common(2)[1][1] == 2:
+        print('Two Pairs')
+    elif Counter(cards).most_common(1)[0][1] == 2:
+        print('Pair')
+    else:
+        print('High Card')
+
+        
+while True:
+    if len(suit) == 1:
+        flush()
+        break
+    if straight():
+        break
+    some_cards()
+    break
