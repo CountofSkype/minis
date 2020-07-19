@@ -1,0 +1,13 @@
+"Перевод числа из одной системы счисления в другую"
+__________________________________________________________________________________________________________________________________________________________________________________
+
+def convert(num, to_base=10, from_base=10):
+    alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    to_10 = 0
+    for i in range(len(str(num))):
+        to_10 += (alphabet.index(str(num)[::-1][i])) * from_base ** i 
+    res = ''
+    while to_10 > 0:
+        res += alphabet[to_10 % to_base]
+        to_10 //= to_base
+    return res[::-1]
