@@ -59,3 +59,33 @@ def kaprekar(n):
         if sq[i:] != '0' * (len(sq) - i) and int(sq[:i]) + int(sq[i:]) == n:
             return True
     return False
+________________________________________________________________________________________________________________________________________________________________________________
+
+Функция kaprekar(n, base=10), принимающая на вход натуральное число (int для десятичной системы счисления, либо строку для иной) и основание системы счисления, 
+а возвращает:
+
+True, если число является Числом Капрекара
+False, если число НЕ является Числом Капрекара
+По умолчанию функция считает, что передаваемое число в десятичной системе счисления.
+________________________________________________________________________________________________________________________________________________________________________________
+
+def convert(num, to_base=10, from_base=10):
+    alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    to_10 = 0
+    for i in range(len(str(num))):
+        to_10 += (alphabet.index(str(num)[::-1][i])) * from_base ** i 
+    res = ''
+    while to_10 > 0:
+        res += alphabet[to_10 % to_base]
+        to_10 //= to_base
+    return res[::-1]
+
+
+def kaprekar(n, base=10):
+    n = convert(n, 10, base)
+    sq = str(int(n) ** 2)
+    sq = convert(sq, base, 10)
+    for i in range(1, len(sq)):
+        if sq[i:] != '0' * (len(sq) - i) and (int(convert(sq[:i], 10, base)) + int(convert(sq[i:], 10, base))) == int(n):
+            return True
+    return False
